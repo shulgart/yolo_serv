@@ -1,0 +1,66 @@
+Execute commands and overall information
+
+In order to execute following commands you should have:
+
+Python3, pip
+
+If you want to launch server directly from build {
+    If you don't have pipenv:
+    pip install pipenv
+
+    Before launching do (it will get required libs with all dependencies from pipfiles):
+    pipenv install
+
+    Activate virtual environment:
+    pipenv shell
+
+    (to exit the pipenv shell you can type in Сtrl + d)
+
+    Then you can decide whether you want to debug the web-server or not:
+    1.  Launch from venv:
+    waitress-serve --host=0.0.0.0 --port=8080 object_detector:app
+
+    2.  Launch from venv (DEBUG mode):
+    flask --app object_detector.py --debug run -p 8080
+
+    To stop the server from running Press Ctrl + C and Enter the special character in the terminal
+}
+
+After the server is up and running you can test its functionality:
+
+1) Html web-server with the option of uploading an image. It then displays resulting image with detected objects (in this case it's cars)
+2) Send request to the server with base64 encoded image and get encoded base64 mask (bboxes)
+
+1. HTML web-server Testing:
+    1) Locate the server with desired browser, type in the address bar:
+        "http://localhost:8080/"
+    2) On the opened page click the button in the upper left corner
+    3) Select the image to be observed
+    4) Wait a moment (around 1 sec with "best.pt" model)
+    5) The resulting image with detected cars with corresponding bboxes will be displayed on the website
+    6) In case if there is no cars detected there will be the original image without transformations
+    7) To stop the server Press Ctrl + C in the terminal and Enter.
+
+2. base64 encoded image api:
+    Example of testing this feature is included in "send_base64.py" file. 
+    This script basically takes an image file from "images" directory, encodes it and sends this data to the server.
+    Feel free to change the path to the desired image.
+    In order to run this test you should do the following:
+    1) Run "send_base64.py":
+        python send_base64.py
+    2) If all is set up correctly server will response with base64 string of bbox mask:
+        1. This string will be written in "response_base64.txt" file
+        2. Resulting mask image will be shown in the end of a test
+    3) To stop the server Press Ctrl + C in the terminal and Enter.
+
+
+
+Known issues:
+
+    1. For some reason the latest release of ultralytics (8.2.75) is not working correctly in local installments.
+    For this reason this project uses 8.2.0 version (it was pointed out as a solution in a related issue on github),
+    which results in some minor warnings from pytorch. It's not (allegedly) affecting performance of a web-server.
+
+Vulnerabilities:
+
+    1. According to pipenv there are two known vulnerabilities. For more information run the check with the line "pipenv check".
